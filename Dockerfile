@@ -1,16 +1,30 @@
-# Use Eclipse Temurin JDK 19 and Alpine Linux as the base image for the final image
+# Stage 1: Build the JAR file
+FROM maven:3.9.9-eclipse-temurin-21-alpine AS builder
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the pom.xml and download dependencies (this is done separately to cache the dependencies and speed up future builds)
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+# Copy the rest of the source code to the container
+COPY src ./src
+
+# Package the application (this will build the JAR file)
+RUN mvn package
+
+# Stage 2: Create the final runtime image
 FROM eclipse-temurin:21-alpine
-#FROM openjdk:17-jdk-slim
 
-## Set the working directory inside the container
-#WORKDIR /app
+# Set the working directory in the container
+WORKDIR /app
 
-# Copy the built JAR file from the build stage to the final image
-COPY target/*.jar app.jar
+# Copy the JAR file from the builder image
+COPY --from=builder /app/target/*.jar app.jar
 
-# Expose the port on which the Spring Boot application will listen
+# Expose port 8080 for the Spring Boot application
 EXPOSE 8080
 
-# Set the command to run the Spring Boot application when the container starts
-CMD ["java", "", "-jar", "app.jar"]
-#CMD ["java", "-Djwt_secret=${jwt_secret} -Dspring.datasource.username=${SPRING_DATASOURCE_USERNAME} -Dspring.datasource.password=${SPRING_DATASOURCE_PASSWORD} -Dspring.datasource.url=${SPRING_DATASOURCE_URL}", "-jar", "app.jar"]
+# Run the JAR file
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]

@@ -13,7 +13,7 @@
 <script>
     function myFunction() {
 
-fetch('http://localhost:8080/api/v1/test')
+fetch('/api/v1/payment-link/generate')
   .then(response => {
     if (!response.ok) {
       throw new Error('Network response was not ok');

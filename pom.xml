@@ -11,8 +11,8 @@
 	<groupId>com.paulo</groupId>
 	<artifactId>stripe</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>stripe</name>
-	<description>stripe-demo</description>
+	<name>api-key-service</name>
+	<description>This app is a demo of a service that automatically issues an api keys to a customer once payment has been made via a strip payment link</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -34,13 +34,24 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>com.stripe</groupId>
 			<artifactId>stripe-java</artifactId>
-			<version>28.0.0</version>
+			<version>28.3.0</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.7.3</version>
+		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
