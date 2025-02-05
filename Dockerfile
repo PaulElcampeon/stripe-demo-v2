@@ -4,15 +4,14 @@ FROM maven:3.9.9-eclipse-temurin-21-alpine AS builder
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the pom.xml and download dependencies (this is done separately to cache the dependencies and speed up future builds)
-COPY pom.xml .
-RUN mvn dependency:go-offline
+# Copy the pom.xml file to the container
+COPY . .
 
-# Copy the rest of the source code to the container
-COPY src ./src
+# Download the dependencies specified in the pom.xml file
+RUN mvn dependency:go-offline -B
 
-# Package the application (this will build the JAR file)
-RUN mvn package
+# Build the application using Maven
+RUN mvn package -DskipTests
 
 # Stage 2: Create the final runtime image
 FROM eclipse-temurin:21-alpine
